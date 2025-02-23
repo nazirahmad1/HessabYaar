@@ -1,0 +1,82 @@
+ <div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">جستجوی معامله</h4>
+                <form class="repeater" enctype="multipart/form-data" method="POST"
+                {{-- action="{{ route('search.transactions') }}" --}}
+                >
+                    @csrf
+                    <div class="row">
+                        <div class="mb-3 col-md-2">
+                            <label for="transaction_type">نوع معامله</label>
+                            <select class="form-control form-control-lg required" name="transaction_type">
+                                <option value="all">همه</option>
+                                <option value="rasid_bord">رسید و بردها</option>
+                                <option value="exchange">تبادلات</option>
+                                <option value="transfer">انتقلات</option>
+                                <option value="expense">مصارف</option>
+                                <option value="income">درآمدها</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-2">
+                            <label for="rasid_bord">نوع رسید وبرد</label>
+                            <select class="form-control form-control-lg required" name="rasid_bord">
+                                <option value="all">همه</option>
+                                <option value="rasid">رسید</option>
+                                <option value="bord">برد</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-4 mt-4 p-2">
+                            {{-- Add a select2 search here --}}
+                            <input type="text" class="form-control" name="customer_name" placeholder="مشتری مورد نظر خود را سرچ کنید">
+                        </div>
+                        <div class="col-md-2 col-xs-12">
+                            <label for="currency">واحد پول :</label>
+                            <select class="form-control form-control-lg select2 required" name="currency">
+                                <option disabled selected>واحد</option>
+                                @foreach ($currencies as $currency)
+                                    <option value="{{ $currency->id }}">
+                                        {{ $currency->name }} {{ $currency->sign }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <span class="text-danger error-text currency_error"></span>
+                        </div>
+                        <div class="col-md-2 col-xs-12">
+                            <label for="dakhl">انتخاب دخل :</label>
+                            {{-- Uncomment below if $banks is defined --}}
+                            {{-- 
+                            <select class="form-control form-control-lg select2 required" name="selected_dakhl">
+                                <option disabled selected>ابتدا واحد پول را انتخاب کنید.</option>
+                                @foreach ($banks as $bank)
+                                    <option value="{{ $bank->id }}">
+                                        {{ $bank->account_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            --}}
+                            <span class="text-danger error-text dakhl_error"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-lg-2">
+                            <label for="start_date">تاریخ شروع</label>
+                            <input type="date" name="start_date" class="form-control">
+                        </div>
+                        <div class="mb-3 col-lg-2">
+                            <label for="end_date">تاریخ ختم</label>
+                            <input type="date" name="end_date" class="form-control">
+                        </div>
+                        <div class="col-lg-1 align-self-center">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-block">جستجو</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

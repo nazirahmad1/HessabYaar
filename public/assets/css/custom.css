@@ -1,0 +1,64 @@
+@import "../fonts/iransans/fontiran.css";
+
+body {
+  font-family: "IRANSansX";
+  font-feature-settings: "ss02";
+}
+
+.form-select,select{
+  background-position: left 0.5rem center !important;
+}
+
+.menu-title{
+  letter-spacing: 0 !important;
+}
+
+.glightbox-clean :is(.gslide-title,.gslide-desc){
+  font-family: "IRANSansX" !important;
+}
+
+.swiper-rtl .swiper-button-prev{
+  left: 10px;
+  right: auto;
+}
+
+.swiper-rtl .swiper-button-next{
+  left: auto;
+  right: 10px;
+}
+
+.form-switch:checked::before{
+  transform: translateX(0);
+}
+
+.form-switch::before{
+  transform: translateX(-100%);
+}
+
+.nice-select{
+  padding-right: 18px;
+  padding-left: 30px;
+}
+
+.gridjs-table{
+  text-align: right !important;
+}
+
+.ql-editor{
+  text-align: right !important;
+  font-family: "IRANSansX";
+  font-feature-settings: "ss02";
+}
+
+.ql-picker{
+  width: -moz-max-content !important;
+  width: max-content !important;
+}
+
+.ql-picker-label::before, .ql-picker-item::before{
+  padding-right: 15px;
+}
+
+.ql-picker-label::before{
+  padding-right: 11px;
+}
