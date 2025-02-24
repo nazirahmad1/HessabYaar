@@ -86,7 +86,7 @@
                    aria-expanded="false" aria-controls="sidebarInventory">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:chart-square-outline"></iconify-icon>
-                        <iconify-icon icon="solar:pie-chart-2-bold-duotone"></iconify-icon>
+                        {{-- <iconify-icon icon="solar:pie-chart-2-bold-duotone"></iconify-icon> --}}
                     </span>
                     <span class="nav-text">گزارشات</span>
                 </a>
@@ -249,8 +249,8 @@
                 </a>
             </li> --}}
 
-           
-        
+
+
         </ul>
     </div>
 </div>
