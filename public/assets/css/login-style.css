@@ -1,0 +1,63 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+*
+{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+}
+
+body
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* min-height: 100vh; */
+    flex-direction: column;
+    /* background: url('./abstract-techno-background-with-connecting-lines.jpg') no-repeat center center/cover; */
+    background: url('./bg0likght.jpeg') no-repeat center center/cover;
+    /* background: url('./3d-render-low-poly-design-abstract-blur-background.jpg') no-repeat center center/cover; */
+    /* background: url('./56cba10a-428e-410d-ae50-7dc9d011b620.jpg') no-repeat center center/cover; */
+    overflow: hidden;
+    /* background: rgba(255, 255, 255, 0.2);  */
+    backdrop-filter: blur(10px); /* Blur effect */
+    -webkit-backdrop-filter: blur(10px); 
+}
+.box {
+    background: rgba(255, 255, 255, 0.2); /* Transparent white */
+    backdrop-filter: blur(10px); /* Blurred background */
+    -webkit-backdrop-filter: blur(10px); /* Safari Support */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Center the Box */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.2); /* Transparent white */
+    backdrop-filter: blur(10px); /* Blur effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
+
+

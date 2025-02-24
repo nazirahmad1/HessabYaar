@@ -1,8 +1,9 @@
 
+
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
+    {{-- <h1 class="text-lg">به سیستم مدیریت حسابیار خوش آمدید</h1> --}}
     <form method="POST" action="{{ route('login') }}" style="direction:rtl;">
         @csrf
 
