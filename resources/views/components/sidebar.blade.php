@@ -2,23 +2,24 @@
 
 <div class="main-nav">
     <!-- Sidebar Logo -->
-    <div class="logo-box">
+    <div class="logo-box px-2">
         <a href="/" class="logo-dark">
-            {{-- <img src="images/logo-sm.png" class="logo-sm" alt="logo sm">
-            <img src="images/logo-dark.png" class="logo-lg" alt="logo dark">
-             --}}
-             <h3 class="pt-2 text-center text-white">Hessab Yaar</h3>
+            {{-- {{-- <img src="images/logo-sm.png" class="logo-sm" alt="logo sm"> --}}
+            <img src="{{asset('images/HessabYaar.svg')}}" class="logo-lg" alt="logo dark">
+
+             {{-- <h3 class="pt-2 text-center text-white">Hessab Yaar</h3> --}}
         </a>
 
         <a href="/" class="logo-light">
             {{-- <img src="images/logo-sm.png" class="logo-sm" alt="logo sm">
             <img src="images/logo-light.png" class="logo-lg" alt="logo light"> --}}
-            <h3 class="pt-2 text-center text-white">Hessab Yaar</h3>
+            <img src="{{asset('images/light-logo.svg')}}" class="logo-lg" alt="logo light">
+            {{-- <h3 class="pt-2 text-center text-white">Hessab Yaar</h3> --}}
         </a>
     </div>
 
     <!-- Menu Toggle Button (sm-hover) -->
-    <button type="button" class="button-sm-hover" aria-label="Show Full Sidebar">
+    <button type="button" class="button-sm-hover " aria-label="Show Full Sidebar">
         <iconify-icon icon="solar:double-alt-arrow-left-bold-duotone" class="button-sm-hover-icon"></iconify-icon>
     </button>
 
