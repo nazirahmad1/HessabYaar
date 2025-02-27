@@ -24,7 +24,7 @@
         data: {
             labels: chartData.labels,
             datasets: [{
-                label: 'Balance',
+                label: 'بیلانس',
                 data: chartData.balanceData,
                 backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',
@@ -46,11 +46,11 @@
         data: {
             labels: chartData.labels,
             datasets: [{
-                label: 'Rasid',
+                label: 'رسید',
                 data: chartData.rasidData,
                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2
+                borderWidth: 1
             }]
         },
         options: {
@@ -68,7 +68,7 @@
         data: {
             labels: chartData.labels,
             datasets: [{
-                label: 'Bord',
+                label: 'برد',
                 data: chartData.bordData,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.6)',
@@ -90,14 +90,28 @@
 
 @endpush
 <p class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">گراف گزارشات /</span> گراف گزارشات 
+    <span class="text-muted fw-light">گراف گزارشات /</span> گراف گزارشات
 </p>
 
-<h2>Bank Balances</h2>
-    
-<canvas id="balanceChart"></canvas>
-<canvas id="rasidChart"></canvas>
-<canvas id="bordChart"></canvas>
+<h2>گزارشات بانکها</h2>
+
+            <div class="card">
+            <div class="card-body">
+            <canvas id="balanceChart" class="mb-3"></canvas>
+            </div>
+            </div>
+
+            <div class="card">
+            <div class="card-body">
+            <canvas id="rasidChart" class="mb-3"></canvas>
+
+            </div>
+            </div>
+            <div class="card">
+            <div class="card-body">
+            <canvas id="bordChart" class="mb-3"></canvas>
+            </div>
+            </div>
 
 
 

@@ -105,7 +105,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center gap-1">
-                <h4 class="card-title flex-grow-1">لیست همه مشتریان</h4>
+                <h4 class="card-title flex-grow-1">لیست مشتریان</h4>
                 <a type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                 data-bs-target="#exampleModal">
                     مشتری جدید

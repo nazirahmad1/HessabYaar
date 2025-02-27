@@ -1091,12 +1091,8 @@
                                     <li class="nav-item">
                                         <a href="#patterned" class="nav-link">نمودار دونات با الگو</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="#image" class="nav-link">نمودار پای با تصویر</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#update" class="nav-link">بروزرسانی دونات</a>
-                                    </li>
+                                 
+                                  
                                 </ul>
                             </div>
                         </div>
