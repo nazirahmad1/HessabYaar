@@ -75,11 +75,12 @@ Route::middleware('auth')->group(function () {
     // banks report
     // Route::get('banksreport', [MyReportController::class, 'getBankBalance'])->name('reports.index');
     Route::get('banksreport', [MyReportController::class, 'getBankBalance'])->name('banksreport.index');
-    Route::get('/bankdetails/{id}',[MyReportController::class, 'getBanksTransaction'])->name('reports.bankdetails');
-    Route::get('/alltransactions',[MyTransactionController::class,
-     'getalltransactions'])->name('reports.alltransactions');
-     Route::get('/rooznamcha',[MyTransactionController::class, 
-     'getrooznamchah'])->name('reports.rooznamchah');
+    // Route::get('/bankdetails/{id}',[MyReportController::class, 'getBanksTransaction'])->name('reports.bankdetails');
+    Route::get('/bankdetails/{id}', [MyReportController::class, 'getBanksTransaction'])->name('reports.bankdetails');
+    Route::get('/reportcharts', [MyReportController::class, 'showcharts'])->name('reports.reportcharts');
+
+    Route::get('/alltransactions',[MyTransactionController::class,'getalltransactions'])->name('reports.alltransactions');
+    Route::get('/rooznamcha',[MyTransactionController::class, 'getrooznamchah'])->name('reports.rooznamchah');
 
 
     //  Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('destroy');

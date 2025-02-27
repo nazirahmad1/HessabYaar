@@ -44,28 +44,30 @@ class MyTransactionController extends Controller
      */
     public function getalltransactions()
     {
-
-        try {
-          
+              try {
 
             $transaction = Transaction::where('status',1)->where('transaction_type','rasid_bord')
             ->with(['financeAccount','customer','tr_currency','eq_currency','bank_account','referencedTransaction','user'])->orderBy('id','desc')
             ->paginate(config('pagination.per_page',10));
+            return response()->json( $transaction);
            
-            $currency = Currency::where('status', '=', '1')->get();
-            $customers = CustomerModel::where('status', '=', '1')->where('role','customer')->orderBy('id', 'desc')->get();
+            $currency = Currency::where('status',  '1')->get();
+            $customers = CustomerModel::where('status',  '1')->where('role','customer')->orderBy('id', 'desc')->get();
 
-            if ($transaction->isEmpty()&& $currency->isEmpty()&& $customers->isEmpty()){
-                return view('reports.alltransactions',['error' => 'Transaction not found'], 404);
-            }
+            // if ($transaction->isEmpty()&& $currency->isEmpty()&& $customers->isEmpty()){
+            //     return view('reports.alltransactions',['error' => 'Transaction not found'], 404);
+            // }
 
-            $total_pages= $transaction->lastPage();
-            return view('reports.alltransactions',['transactions' =>$transaction,'currencies' => $currency,'customers' => $customers,'total_pages'=>$transaction]);
+           
+            return response()->json($transaction);
+            // return view('reports.alltransactions',['transactions' 
+            // =>$transaction,'currencies' => $currency,'customers' => $customers,'total_pages'=>$transaction]);
         }
         catch (\Exception $e) {
             return view('reports.alltransactions',['error' => $e->getMessage()]);
         }
 
+       
     }
 
     // select all transaction that have the ref_id = customer id in the profile page

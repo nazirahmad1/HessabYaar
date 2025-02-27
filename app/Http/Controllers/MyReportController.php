@@ -14,58 +14,12 @@ use Morilog\Jalali\Jalalian;
 
 class MyReportController extends Controller
 {
-    // public function getBankBalance(){
-
-    //     try {
-    //        $bank_balance = BankBalance::paginate(config('pagination.per_page'));
-    //        $currency_count= Currency::where('status',1)->count();
-    //        $financeAcc_count= FinanceAccount::where('status',1)->count();
-    //        $allbalances = $this->getAllBalances();
-    //        if($bank_balance->isEmpty()){
-    //            return view('reports.index',[]);
-    //        }
-
-    //        return view('reports.index',['currency_counts'
-    //        =>$currency_count,'financeAcc_count'=>$financeAcc_count,'allbalances'=>$allbalances,'bank_balance'=>$bank_balance]);
-
-    //     } catch (\Throwable $e) {
-    //         Log::error('Error fetching Myreport: ', ['exception' => $e->getMessage()]);
-
-    //        return view('reports.index',['message'=>$e->getMessage()]);
-    //     }
-    //    }
+    
 
 
-
-
-//     public function getBankBalance()
-// {
-//     try {
-//         $bank_balance = BankBalance::select(
-//                 'account_name', 
-//                 'currencyname', 
-//                 DB::raw('COUNT(*) AS total')
-//             )
-//             ->groupBy('account_name', 'currencyname')
-//             ->paginate(config('pagination.per_page'));
-
-//             $currency_counts= Currency::where('status',1)->count();
-//            $financeAcc_count= FinanceAccount::where('status',1)->count();
-
-//         return view('reports.index', [
-//             'currency_counts' => $currency_counts, 
-//             'financeAcc_count' => $financeAcc_count, 
-//             'bank_balance' => $bank_balance
-//         ]);
-
-//     } catch (\Throwable $e) {
-//         return response()->json(['message' => $e->getMessage()], 500);
-//     }
-// }
-
-public function getBankBalance(Request $request){
+       public function getBankBalance(Request $request){
              
-    try {
+        try {
     
 
        $bankBalance = BankBalance::paginate(config('pagination.per_page'));
@@ -75,8 +29,7 @@ public function getBankBalance(Request $request){
        if($bankBalance->isEmpty()){
            return response()->json([]);
        }
-  
-    //    return response()->json($allbalances);
+
 
     return view('reports.index', [
                     'currency_counts' => $currency_count, 
@@ -89,6 +42,42 @@ public function getBankBalance(Request $request){
        return response()->json(['message'=>$e->getMessage()]);
     }
    }
+
+   public function getAllBalances() {
+    $transactions = Transaction::select('currency', 'rasid_bord', DB::raw('SUM(amount) as total_amount'))
+        ->groupBy('currency', 'rasid_bord')
+        ->with('tr_currency') // Assuming the relationship name is tr_currency
+        ->get();
+
+    $balances = [];
+
+    foreach ($transactions as $transaction) {
+        $currencyName = $transaction->tr_currency->name; // Accessing the currency name through the relationship
+
+        $rasidBord = $transaction->rasid_bord;
+        if (!isset($balances[$currencyName])) {
+            $balances[$currencyName] = [
+                'currency' => $currencyName,
+                'rasid' => 0,
+                'bord' => 0,
+                'balance' => 0
+            ];
+        }
+
+        if ($rasidBord === 'rasid') {
+            $balances[$currencyName]['rasid'] += $transaction->total_amount;
+        } elseif ($rasidBord === 'bord') {
+            $balances[$currencyName]['bord'] += $transaction->total_amount;
+        }
+    }
+
+    foreach ($balances as &$balance) {
+        $balance['balance'] = $balance['rasid'] - $balance['bord'];
+    }
+
+    // return array_values($balances);
+    return array_values($balances);
+    }
 
 public function getrooznamchah(Request $request)
 {
@@ -165,53 +154,125 @@ public function getrooznamchah(Request $request)
 }
 
 
-       public function getAllBalances() {
-        $transactions = Transaction::select('currency', 'rasid_bord', DB::raw('SUM(amount) as total_amount'))
-            ->groupBy('currency', 'rasid_bord')
-            ->with('tr_currency') // Assuming the relationship name is tr_currency
-            ->get();
-
-        $balances = [];
-
-        foreach ($transactions as $transaction) {
-            $currencyName = $transaction->tr_currency->name; // Accessing the currency name through the relationship
-
-            $rasidBord = $transaction->rasid_bord;
-            if (!isset($balances[$currencyName])) {
-                $balances[$currencyName] = [
-                    'currency' => $currencyName,
-                    'rasid' => 0,
-                    'bord' => 0,
-                    'balance' => 0
-                ];
-            }
-
-            if ($rasidBord === 'rasid') {
-                $balances[$currencyName]['rasid'] += $transaction->total_amount;
-            } elseif ($rasidBord === 'bord') {
-                $balances[$currencyName]['bord'] += $transaction->total_amount;
-            }
-        }
-
-        foreach ($balances as &$balance) {
-            $balance['balance'] = $balance['rasid'] - $balance['bord'];
-        }
-
-        // return array_values($balances);
-        return array_values($balances);
-    }
+   
 
 
-    // public function getBanksTransaction($id){
-    //     $bankTransaction = Transaction::where('bank_acount_id',$id)->where('status',1)->with(['financeAccount','customer','tr_currency','bank_account','user'])->orderBy('id','desc')->get();
-    //     return view('reports.bankdetails',['banksTransaction'=>$bankTransaction]);
+
+
+    // public function getBanksTransaction(Request $request){
+    //     $id = $request->id;
+    //     $transactions = Transaction::where('bank_acount_id',$id)->where(
+    //         'status',1)->with(['financeAccount','customer','tr_currency','bank_account',
+    //         'user'])->orderBy('id','desc')->paginate(config('pagination.per_page', 10));
+    //     return view('reports.bankdetails',['transactions'=>$transactions]);
     // }
 
-    public function getBanksTransaction(Request $request){
+//     public function getBanksTransaction(Request $request)
+// {
+//     // Validate request to ensure 'id' is present and numeric
+//     $request->validate([
+//         'id' => 'required|integer|exists:bank_accounts,id'
+//     ]);
+
+//     $id = $request->id;
+
+//     // Fetch transactions with related models
+//     $transactions = Transaction::where('bank_account_id', $id)
+//         ->where('status', 1)
+//         ->with(['financeAccount', 'customer', 'tr_currency', 'bank_account', 'user'])
+//         ->orderBy('id', 'desc')
+//         ->paginate(config('pagination.per_page', 10)); // Default to 10 if not set
+
+//     return view('reports.bankdetails', ['transactions' => $transactions]);
+// }
+
+// public function getBanksTransaction(Request $request)
+// {
+//     // Validate request to ensure 'id' is present and numeric
+//     $request->validate([
+//         'id' => 'required|integer|exists:bank_accounts,id'
+//     ]);
+
+//     $id = $request->id;
+
+//     // Fetch transactions and paginate results
+//     $transactions = Transaction::where('bank_account_id', $id)
+//         ->where('status', 1)
+//         ->with(['financeAccount', 'customer', 'tr_currency', 'bank_account', 'user'])
+//         ->orderBy('id', 'desc')
+//         ->paginate(config('pagination.per_page', 10)); // Ensures pagination works
+
+//     return view('reports.bankdetails', ['transactions' => $transactions, 'id' => $id]);
+// }
+
+
+
+public function getBanksTransaction(Request $request)
+{
+    try {
+        // Validate request
+        // $request->validate([
+        //     'id' => 'required|integer|exists:bank_accounts,id'
+        // ]);
+
         $id = $request->id;
-        $transactions = Transaction::where('bank_acount_id',$id)->where(
-            'status',1)->with(['financeAccount','customer','tr_currency','bank_account',
-            'user'])->orderBy('id','desc')->paginate(config('pagination.per_page', 10));
-        return view('reports.bankdetails',['transactions'=>$transactions]);
+
+        // Fetch transactions
+        $transactions = Transaction::where('bank_account_id', $id)
+            ->where('status', 1)
+            ->with(['financeAccount', 'customer', 'tr_currency', 'bank_account', 'user'])
+            ->orderBy('id', 'desc')
+            ->paginate(config('pagination.per_page', 10));
+
+        return view('reports.bankdetails', ['transactions' => $transactions, 'id' => $id]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
     }
+}
+
+
+    public function showcharts(Request $request){
+
+    try {
+        $bankBalance = BankBalance::paginate(config('pagination.per_page'));
+        $currency_count = Currency::where('status', 1)->count();
+        $financeAcc_count = FinanceAccount::where('status', 1)->count();
+        $allbalances = $this->getAllBalances();
+
+        if ($bankBalance->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Prepare data for charts
+        $labels = [];
+        $rasidData = [];
+        $bordData = [];
+        $balanceData = [];
+
+        foreach ($allbalances as $balance) {
+            $labels[] = $balance['currency'];
+            $rasidData[] = $balance['rasid'];
+            $bordData[] = $balance['bord'];
+            $balanceData[] = $balance['balance'];
+        }
+
+        return view('reports.reportcharts', [
+            'currency_counts' => $currency_count,
+            'financeAcc_count' => $financeAcc_count,
+            'bank_balance' => $bankBalance,
+            'allbalances' => $allbalances,
+            'chartData' => [
+                'labels' => $labels,
+                'rasidData' => $rasidData,
+                'bordData' => $bordData,
+                'balanceData' => $balanceData,
+            ],
+        ]);
+
+    } catch (\Throwable $e) {
+        return response()->json(['message' => $e->getMessage()]);
+    }
+
+    }
+
 }

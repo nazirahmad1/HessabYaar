@@ -102,8 +102,9 @@
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{ route('reports.alltransactions') }}">تمام تراکنش ها</a>
                         </li>
+                     
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="{{ route('reports.alltransactions') }}">نمودار تراکنش ها</a>
+                            <a class="sub-nav-link" href="{{ route('reports.reportcharts') }}">نمودار تراکنش ها</a>
                         </li>
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{ route('reports.rooznamchah') }}">روزنامچه</a>

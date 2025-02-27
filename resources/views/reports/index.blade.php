@@ -121,7 +121,7 @@
             </div>
             <div>
                 <div class="table-responsive">
-                    <table class="table align-middle mb-0 table-hover table-centered" id="customerTable">
+                    <table class="table align-middle mb-0 table-hover table-centered" >
                         <thead class="bg-light-subtle">
                             <tr>
                                 <th>واحد</th>
@@ -251,9 +251,11 @@
                                     </td>
                                     <td>
 
-                                        {{-- <a href="{{ route('reports.bankdetails', $bank['id']) }}" class="">
+                                        <a href="{{ route('reports.bankdetails',  $bank->id) }}" class="">
+                                            {{-- <a href="{{ route('reports.bankdetails', $bank->id) }}"> --}}
+
                                             <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
-                                        </a> --}}
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
