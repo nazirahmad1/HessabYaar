@@ -166,17 +166,17 @@
                 </div>
                 <!-- end table-responsive -->
             </div>
-            <div class="card-footer border-top">
+            {{-- <div class="card-footer border-top">
                 <nav aria-label="Page navigation example">
 
-                    {{-- @if(isset($allbalances) && $allbalances->isNotEmpty())
+                    @if(isset($allbalances))
                     <div class="mt-3 d-flex justify-content-center">
                         {{ $allbalances->links('pagination::bootstrap-5') }}
                     </div>
-                    @endif --}}
+                    @endif
                     
                 </nav>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -186,7 +186,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <form id="search-form" method="GET" action="{{ route('rasid_bord.index') }}" class="d-flex align-items-center gap-2">
+                        <form id="search-form" method="GET" action="{{ route('banksreport.index') }}" class="d-flex align-items-center gap-2">
                             <label for="searchCustomer" class="form-label mb-0">جستجوی گزارشات:</label>
                             <input type="text" name="search" id="search" class="form-control w-auto" placeholder="برای جستجو..." value="{{ request('search') }}">
                             
@@ -195,7 +195,7 @@
                             </button>
                 
                             @if(request('search'))
-                                <a href="{{ route('rasid_bord.index') }}" class="btn btn-sm btn-secondary">
+                                <a href="{{ route('banksreport.index') }}" class="btn btn-sm btn-secondary">
                                     نمایش همه <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
                                 </a>
                             @endif
@@ -251,9 +251,9 @@
                                     </td>
                                     <td>
 
-                                        <a href="{{ route('reports.bankdetails', $bank['id']) }}" class="">
+                                        {{-- <a href="{{ route('reports.bankdetails', $bank['id']) }}" class="">
                                             <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
-                                        </a>
+                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach

@@ -339,7 +339,7 @@
                                         <span class="badge font-size-13 {{ $currency['bord'] > 0 ? 'bg-success' : 'bg-danger' }}">
                                             {{ number_format($currency['bord']) }}
                                         </span>
-                                    </td>
+                                  </td>
                                     <td>
                                         <span class="badge font-size-13 {{ $currency['balance'] > 0 ? 'bg-success' : 'bg-danger text-left' }}">
                                             {{ number_format($currency['balance']) }}

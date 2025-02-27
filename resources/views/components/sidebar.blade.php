@@ -96,8 +96,14 @@
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{ route('banksreport.index')}}">گزارش بانکها</a>
                         </li>
+                        {{-- <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{ route('reports.alltransactions') }}">قرض و رسیدها</a>
+                        </li> --}}
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{ route('reports.alltransactions') }}">تمام تراکنش ها</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{ route('reports.alltransactions') }}">نمودار تراکنش ها</a>
                         </li>
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{ route('reports.rooznamchah') }}">روزنامچه</a>

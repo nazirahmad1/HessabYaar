@@ -36,36 +36,59 @@ class MyReportController extends Controller
     //    }
 
 
-    public function getBankBalance()
-{
+
+
+//     public function getBankBalance()
+// {
+//     try {
+//         $bank_balance = BankBalance::select(
+//                 'account_name', 
+//                 'currencyname', 
+//                 DB::raw('COUNT(*) AS total')
+//             )
+//             ->groupBy('account_name', 'currencyname')
+//             ->paginate(config('pagination.per_page'));
+
+//             $currency_counts= Currency::where('status',1)->count();
+//            $financeAcc_count= FinanceAccount::where('status',1)->count();
+
+//         return view('reports.index', [
+//             'currency_counts' => $currency_counts, 
+//             'financeAcc_count' => $financeAcc_count, 
+//             'bank_balance' => $bank_balance
+//         ]);
+
+//     } catch (\Throwable $e) {
+//         return response()->json(['message' => $e->getMessage()], 500);
+//     }
+// }
+
+public function getBankBalance(Request $request){
+             
     try {
-        // $bank_balance = BankBalance::get();
-        // select('account_name', 'currencyname', DB::raw('count(*) as aggregate'))
-            // ->groupBy('account_name', 'currency_name')  // Ensure all selected fields are in the GROUP BY clause
-            // ->paginate(config('pagination.per_page'));
+    
 
-        // Fetch other counts as needed
-        $currency_count = Currency::where('status', 1)->count();
-        $financeAcc_count = FinanceAccount::where('status', 1)->count();
-        $allbalances = $this->getAllBalances();
+       $bankBalance = BankBalance::paginate(config('pagination.per_page'));
+       $currency_count= Currency::where('status',1)->count();
+       $financeAcc_count= FinanceAccount::where('status',1)->count();
+       $allbalances = $this->getAllBalances();
+       if($bankBalance->isEmpty()){
+           return response()->json([]);
+       }
+  
+    //    return response()->json($allbalances);
 
-        return view('reports.index', [
-            'currency_counts' => $currency_count,
-            'financeAcc_count' => $financeAcc_count,
-            'allbalances' => $allbalances,
-            // 'bank_balance' => $bank_balance,
-        ]);
+    return view('reports.index', [
+                    'currency_counts' => $currency_count, 
+                    'financeAcc_count' => $financeAcc_count, 
+                    'bank_balance' => $bankBalance,
+                    'allbalances'=>$allbalances
+                ]);
+   
     } catch (\Throwable $e) {
-        Log::error('Error fetching Myreport: ', ['exception' => $e->getMessage()]);
-
-        // Ensure all variables exist, even in case of an error
-        return view('reports.index', [
-            // Empty collection to prevent pagination errors
-            'message' => $e->getMessage(),
-        ]);
+       return response()->json(['message'=>$e->getMessage()]);
     }
-}
-
+   }
 
 public function getrooznamchah(Request $request)
 {
@@ -75,7 +98,7 @@ public function getrooznamchah(Request $request)
         $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
 
         // Start query for transactions
-        $query = Transaction::where('status', '1')
+        $query = Transaction::where('status', 1)
                             ->whereDate('date', $today_date)
                             ->with([
                                 'financeAccount',
