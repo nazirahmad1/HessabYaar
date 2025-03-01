@@ -4,12 +4,9 @@
 
 @section('content')
 
-
 @push('styles')
 
 @endpush
-
-
 
 @push('scripts')
 <script src="{{asset('assets/js/mychart.js')}}"></script>
@@ -33,6 +30,7 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: { beginAtZero: true }
             }
@@ -55,6 +53,7 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: { beginAtZero: true }
             }
@@ -80,13 +79,58 @@
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Profit Chart (New Chart Added)
+    const ctxProfit = document.getElementById('profitChart').getContext('2d');
+    new Chart(ctxProfit, {
+        type: 'doughnut',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'سود',
+                data: chartData.profitData,
+                backgroundColor: [
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(75, 192, 192, 0.6)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Column Chart (New Chart Added)
+    const ctxColumn = document.getElementById('columnChart').getContext('2d');
+    new Chart(ctxColumn, {
+        type: 'bar',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'ستون',
+                data: chartData.columnData,
+                backgroundColor: 'rgba(255, 205, 86, 0.6)',
+                borderColor: 'rgba(255, 205, 86, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y', // Column chart (horizontal bar)
+            scales: {
+                x: { beginAtZero: true }
+            }
         }
     });
 
 </script>
-
-
 
 @endpush
 <p class="fw-bold py-3 mb-4">
@@ -95,24 +139,34 @@
 
 <h2>گزارشات بانکها</h2>
 
-            <div class="card">
-            <div class="card-body">
-            <canvas id="balanceChart" class="mb-3"></canvas>
-            </div>
-            </div>
+<div class="card">
+    <div class="card-body">
+        <canvas id="balanceChart" width="300" height="300" class="mb-3"></canvas>
+    </div>
+</div>
 
-            <div class="card">
-            <div class="card-body">
-            <canvas id="rasidChart" class="mb-3"></canvas>
+<div class="card">
+    <div class="card-body">
+        <canvas id="rasidChart" width="300" height="300" class="mb-3"></canvas>
+    </div>
+</div>
 
-            </div>
-            </div>
-            <div class="card">
-            <div class="card-body">
-            <canvas id="bordChart" class="mb-3"></canvas>
-            </div>
-            </div>
+<div class="card">
+    <div class="card-body">
+        <canvas id="bordChart" width="300" height="300" class="mb-3"></canvas>
+    </div>
+</div>
 
+<div class="card">
+    <div class="card-body">
+        <canvas id="profitChart" width="300" height="300" class="mb-3"></canvas>
+    </div>
+</div>
 
+<div class="card">
+    <div class="card-body">
+        <canvas id="columnChart" width="300" height="300" class="mb-3"></canvas>
+    </div>
+</div>
 
 @endsection
