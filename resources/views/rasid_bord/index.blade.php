@@ -3,14 +3,17 @@
 @section('page_title', 'لیست رسیدوبرد')
 
 @push('styles')
-      <!-- Jalali Picker -->
-  <link href="{{asset('assets/css/flatpickr.min.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/css/flatpicker-rtl.css')}}" rel="stylesheet">
+
+
+<!-- Jalali Datepicker CSS -->
+<link rel="stylesheet" href="{{ asset('assets/jalali-date/jalalidatepicker.min.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('assets/js/myjs/myjalalidate.js') }}"></script>
 <script src="{{ asset('assets/js/myjs/ajaxformsubmit.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/jalali-date/jalalidatepicker.min.js') }}"></script>
+
+
 <script>
 
 
@@ -21,8 +24,6 @@ $(document).ready(function() {
                 width: '100%' // Ensures it adapts to the form width
             });
         });
-
-
 
 $(document).ready(function () {
     $('#currency').on('change', function () {
@@ -48,18 +49,18 @@ $(document).ready(function () {
                     }
 
                     // Update the currency dropdown
-                    const $currencyEqualDropdown = $('#currencyequal');
-                    $currencyEqualDropdown.empty();
-                    $currencyEqualDropdown.append('<option value="">واحد پول رسید را انتخاب کنید</option>');
+                    // const $currencyEqualDropdown = $('#currencyequal');
+                    // $currencyEqualDropdown.empty();
+                    // $currencyEqualDropdown.append('<option value="">واحد پول رسید را انتخاب کنید</option>');
 
                     if (response.financeAccCurrencies) {
                         // Since financeAccCurrencies is a single object, append it directly
                         const currency = response.financeAccCurrencies;
-                        $currencyEqualDropdown.append(`<option value="${currency.id}">${currency.name}</option>`);
+                        // $currencyEqualDropdown.append(`<option value="${currency.id}">${currency.name}</option>`);
 
                         // Automatically select the same currency if it matches the selected currency
                         if (currency.id == selectedCurrencyId) {
-                            $currencyEqualDropdown.val(selectedCurrencyId).change();
+                            // $currencyEqualDropdown.val(selectedCurrencyId).change();
                         }
                     } else {
                         alert('برای این واحد پولی ،واحد پولی یافت نشد!');
@@ -86,6 +87,10 @@ $(document).ready(function () {
                ajaxFormSubmit('#addrasid_bord', "{{ route('rasid_bord.store') }}");
            });
    </script>
+   <script>
+    // Optional: if needed to force initialize (in most cases, data-jdp auto-initializes)
+    jalaliDatepicker.startWatch();
+</script>
 @endpush
 @section('content')
 
@@ -95,6 +100,7 @@ $(document).ready(function () {
 
 
 <div class="row">
+
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
@@ -351,10 +357,15 @@ $(document).ready(function () {
                         </div>
                         <div class="col mb-1">
                             <label for="date" class="form-label">تاریخ</label>
-                            <input type="date" id="basic-datepicker"
+                            {{-- <input type="date" id="basic-datepicker"
                             class="form-control  placeholder="تاریخ انتخاب اولیه" name="date" id="date"
-                              old="{{old('date')}}" required>
-                            
+                              old="{{old('date')}}" required> --}}
+                                <!-- Your date input -->
+                            <input type="text" class="form-control "
+                            data-jdp
+                            placeholder="لطفا یک تاریخ وارد نمایید"
+                            data-jdp-only-date
+                            old="{{old('date')}}" required/>
                             @error('date')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

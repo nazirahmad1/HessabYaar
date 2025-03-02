@@ -44,13 +44,12 @@ class MyTransactionController extends Controller
      */
     public function getalltransactions()
     {
-              try {
-
+        try {
             $transaction = Transaction::where('status',1)->where('transaction_type','rasid_bord')
             ->with(['financeAccount','customer','tr_currency','eq_currency','bank_account','referencedTransaction','user'])->orderBy('id','desc')
             ->paginate(config('pagination.per_page',10));
-            return response()->json( $transaction);
-           
+            // return response()->json( $transaction);
+
             $currency = Currency::where('status',  '1')->get();
             $customers = CustomerModel::where('status',  '1')->where('role','customer')->orderBy('id', 'desc')->get();
 
@@ -58,27 +57,25 @@ class MyTransactionController extends Controller
             //     return view('reports.alltransactions',['error' => 'Transaction not found'], 404);
             // }
 
-           
-            return response()->json($transaction);
-            // return view('reports.alltransactions',['transactions' 
-            // =>$transaction,'currencies' => $currency,'customers' => $customers,'total_pages'=>$transaction]);
+
+            // return response()->json($transaction);
+            return view('reports.alltransactions',['transactions'
+            =>$transaction,'currencies' => $currency,'customers' => $customers,'total_pages'=>$transaction]);
         }
         catch (\Exception $e) {
             return view('reports.alltransactions',['error' => $e->getMessage()]);
         }
 
-       
+
     }
 
     // select all transaction that have the ref_id = customer id in the profile page
-    public function getCustomerInfo($id){
-           
-        // for getting the customer balance from customer controller and send with it
-        try {
-            
-            $customerBalance = $this->customerService->getCustomerBalance($id);
 
-            $transactions = Transaction::where('status', '1')
+     public function getCustomerInfo($id){
+        try {
+
+            $customerBalance = $this->customerService->getCustomerBalance($id);
+            $transactions = Transaction::where('status', 1)
             ->where('ref_id', $id)
             ->whereIn('transaction_type', ['rasid_bord'])
             ->with([
@@ -91,9 +88,9 @@ class MyTransactionController extends Controller
             ])
             ->orderBy('id', 'desc')
             ->paginate(config('pagination.per_page', 10));
-            
+
                 $customer = CustomerModel::findOrFail($id);
-            
+
                 // Calculate "rasid" and "bord" totals
                 $rasid = Transaction::where('status', 1)
                 ->where('ref_id', $id)
@@ -102,18 +99,8 @@ class MyTransactionController extends Controller
                 ->where('ref_id', $id)
                 ->sum('amount_equal');
                 $totalAmount = $rasid - $bord;
-
-                // if( $transactions->isEmpty()){
-                //     return response()->json([]);
-                // }
-                // $currency = Currency::where('status',1)->get();
                 $currencies = Currency::where('status', 1)->get();
-           
 
-                // Handle case where no transactions exist
-           
-
-                 // Pass data to the view
             return view('customer.show', [
                 'customer' => $customer,
                 'transactions' => $transactions,
@@ -123,34 +110,37 @@ class MyTransactionController extends Controller
                 'customerBalance' => $customerBalance,
                 'currencies' => $currencies,
             ]);
-                  
+
             } catch (\Throwable $e) {
-              return response()->json(['message'=>$e->getMessage()]);
+                return view('customer.show',['message'=>'تراکنشی یافت نشد']);
             }
     }
-    
-    
+
+
     public function getrooznamchah(Request $request)
     {
+
         try {
             // Get today's Jalali date
             $date = Jalalian::now();
             $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
-    
+
+
             // Fetch transactions for today
-            $transactions = Transaction::where('status', '1')
+            $transactions = Transaction::where('status', 1)
                 ->whereDate('date', $today_date)
                 ->with([
-                    'financeAccount', 
-                    'customer', 
-                    'tr_currency', 
-                    'eq_currency', 
-                    'bank_account', 
+                    'financeAccount',
+                    'customer',
+                    'tr_currency',
+                    'eq_currency',
+                    'bank_account',
                     'referencedTransaction'
                 ])
                 ->orderBy('id', 'desc')
                 ->paginate(config('pagination.per_page'));
-    
+
+                return $transactions;
             // Fetch currencies, customers, and finance accounts
             $currencies = Currency::where('status', 1)->get();
             $customers = CustomerModel::where('status', 1)->get();
@@ -158,16 +148,15 @@ class MyTransactionController extends Controller
                 ->where('account', 'bank')
                 ->with(['finance_currency'])
                 ->get();
-    
+
             // Check if all data sets are empty
             if ($transactions->isEmpty() && $currencies->isEmpty() && $customers->isEmpty()) {
                 return view('reports.rooznamchah', []);
             }
-    
+
             // Pass data to the view
             return view('reports.rooznamchah', [
                 'transactions' => $transactions,
-                'total_pages' => $transactions->lastPage(),
                 'currencies' => $currencies,
                 'customers' => $customers,
                 'financeAccounts' => $financeAccounts,
@@ -177,7 +166,7 @@ class MyTransactionController extends Controller
             return view('reports.rooznamchah', ['error' => $e->getMessage()]);
         }
     }
-    
+
 
 
 
@@ -189,7 +178,7 @@ class MyTransactionController extends Controller
     {
 
         $check_number = $this->new_check_number();
-       
+
 
             DB::beginTransaction();
             try{
@@ -256,7 +245,7 @@ class MyTransactionController extends Controller
     public function show($id)
     {
         try {
-            $transaction = Transaction::where('id','=',$id)->where('status', '=', '1')->with(['financeAccount','customer','tr_currency','eq_currency','bank_account'])->get();
+            $transaction = Transaction::where('id','=',$id)->where('status','1')->with(['financeAccount','customer','tr_currency','eq_currency','bank_account'])->get();
 
             if ($transaction->isEmpty()) {
                 return response()->json([]);
@@ -273,7 +262,7 @@ class MyTransactionController extends Controller
      */
     public function update(Request $request,Transaction $transaction)
     {
-       
+
             DB::beginTransaction();
             $transaction_values = [
                 'rasid_bord'=> $request->rasid_bord,

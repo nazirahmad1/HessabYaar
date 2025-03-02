@@ -79,12 +79,15 @@ class MyReportController extends Controller
     return array_values($balances);
     }
 
-public function getrooznamchah(Request $request)
-{
+  
+    public function getrooznamchah(Request $request)
+  {
     try {
         // Get today's Jalali date
         $date = Jalalian::now();
         $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
+
+        return response()->json($today_date);
 
         // Start query for transactions
         $query = Transaction::where('status', 1)
@@ -157,56 +160,6 @@ public function getrooznamchah(Request $request)
    
 
 
-
-
-    // public function getBanksTransaction(Request $request){
-    //     $id = $request->id;
-    //     $transactions = Transaction::where('bank_acount_id',$id)->where(
-    //         'status',1)->with(['financeAccount','customer','tr_currency','bank_account',
-    //         'user'])->orderBy('id','desc')->paginate(config('pagination.per_page', 10));
-    //     return view('reports.bankdetails',['transactions'=>$transactions]);
-    // }
-
-//     public function getBanksTransaction(Request $request)
-// {
-//     // Validate request to ensure 'id' is present and numeric
-//     $request->validate([
-//         'id' => 'required|integer|exists:bank_accounts,id'
-//     ]);
-
-//     $id = $request->id;
-
-//     // Fetch transactions with related models
-//     $transactions = Transaction::where('bank_account_id', $id)
-//         ->where('status', 1)
-//         ->with(['financeAccount', 'customer', 'tr_currency', 'bank_account', 'user'])
-//         ->orderBy('id', 'desc')
-//         ->paginate(config('pagination.per_page', 10)); // Default to 10 if not set
-
-//     return view('reports.bankdetails', ['transactions' => $transactions]);
-// }
-
-// public function getBanksTransaction(Request $request)
-// {
-//     // Validate request to ensure 'id' is present and numeric
-//     $request->validate([
-//         'id' => 'required|integer|exists:bank_accounts,id'
-//     ]);
-
-//     $id = $request->id;
-
-//     // Fetch transactions and paginate results
-//     $transactions = Transaction::where('bank_account_id', $id)
-//         ->where('status', 1)
-//         ->with(['financeAccount', 'customer', 'tr_currency', 'bank_account', 'user'])
-//         ->orderBy('id', 'desc')
-//         ->paginate(config('pagination.per_page', 10)); // Ensures pagination works
-
-//     return view('reports.bankdetails', ['transactions' => $transactions, 'id' => $id]);
-// }
-
-
-
 public function getBanksTransaction(Request $request)
 {
     try {
@@ -232,7 +185,6 @@ public function getBanksTransaction(Request $request)
 
 
     public function showcharts(Request $request){
-
     try {
         $bankBalance = BankBalance::paginate(config('pagination.per_page'));
         $currency_count = Currency::where('status', 1)->count();
