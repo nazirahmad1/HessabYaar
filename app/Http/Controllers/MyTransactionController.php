@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\CustomerService;
 use Morilog\Jalali\Jalalian;
-
+use Illuminate\Support\Facades\Log;
 class MyTransactionController extends Controller
 {
 
@@ -117,57 +117,130 @@ class MyTransactionController extends Controller
     }
 
 
+    // public function getrooznamchah(Request $request)
+    // {
+
+    //     try {
+    //         // Get today's Jalali date
+    //         $date = Jalalian::now();
+    //         $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
+
+
+    //         // Fetch transactions for today
+    //         $transactions = Transaction::where('status', 1)
+    //             ->whereDate('date', $today_date)
+    //             ->with([
+    //                 'financeAccount',
+    //                 'customer',
+    //                 'tr_currency',
+    //                 'eq_currency',
+    //                 'bank_account',
+    //                 'referencedTransaction'
+    //             ])
+    //             ->orderBy('id', 'desc')
+    //             ->paginate(config('pagination.per_page'));
+
+    //             // return $transactions;
+    //         // Fetch currencies, customers, and finance accounts
+    //         $currencies = Currency::where('status', 1)->get();
+    //         $customers = CustomerModel::where('status', 1)->get();
+    //         $financeAccounts = FinanceAccount::where('status', '1')
+    //             ->where('account', 'bank')
+    //             ->with(['finance_currency'])
+    //             ->get();
+
+    //         // Check if all data sets are empty
+    //         if ($transactions->isEmpty() && $currencies->isEmpty() && $customers->isEmpty()) {
+    //             return view('reports.rooznamchah', []);
+    //         }
+
+    //         // Pass data to the view
+    //         return view('reports.rooznamchah', [
+    //             'transactions' => $transactions,
+    //             'currencies' => $currencies,
+    //             'customers' => $customers,
+    //             'financeAccounts' => $financeAccounts,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         // Handle any errors and display them in the view
+    //         return view('reports.rooznamchah', ['error' => $e->getMessage()]);
+    //     }
+    // }
+
     public function getrooznamchah(Request $request)
     {
-
-        try {
-            // Get today's Jalali date
-            $date = Jalalian::now();
-            $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
-
-
-            // Fetch transactions for today
-            $transactions = Transaction::where('status', 1)
-                ->whereDate('date', $today_date)
-                ->with([
-                    'financeAccount',
-                    'customer',
-                    'tr_currency',
-                    'eq_currency',
-                    'bank_account',
-                    'referencedTransaction'
-                ])
-                ->orderBy('id', 'desc')
-                ->paginate(config('pagination.per_page'));
-
-                return $transactions;
-            // Fetch currencies, customers, and finance accounts
-            $currencies = Currency::where('status', 1)->get();
-            $customers = CustomerModel::where('status', 1)->get();
-            $financeAccounts = FinanceAccount::where('status', '1')
-                ->where('account', 'bank')
-                ->with(['finance_currency'])
-                ->get();
-
-            // Check if all data sets are empty
-            if ($transactions->isEmpty() && $currencies->isEmpty() && $customers->isEmpty()) {
-                return view('reports.rooznamchah', []);
-            }
-
-            // Pass data to the view
-            return view('reports.rooznamchah', [
-                'transactions' => $transactions,
-                'currencies' => $currencies,
-                'customers' => $customers,
-                'financeAccounts' => $financeAccounts,
-            ]);
-        } catch (\Exception $e) {
-            // Handle any errors and display them in the view
-            return view('reports.rooznamchah', ['error' => $e->getMessage()]);
-        }
-    }
-
-
+      try {
+        //   return "Hello";
+          // Get today's Jalali date
+          $date = Jalalian::now();
+          $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
+  
+          // Start query for transactions
+          $query = Transaction::where('status', 1)
+                              ->whereDate('date', $today_date)
+                              ->with([
+                                  'financeAccount',
+                                  'customer',
+                                  'tr_currency',
+                                  'eq_currency',
+                                  'bank_account',
+                                  'referencedTransaction'
+                              ]);
+  
+          // Apply search filter if provided
+          if ($request->has('search') && !empty($request->search)) {
+              $search = $request->search;
+  
+              $query->where(function ($q) use ($search) {
+                  $q->where('id', 'like', "%{$search}%")
+                    ->orWhere('date', 'like', "%{$search}%")
+                    ->orWhere('amount', 'like', "%{$search}%")
+                    ->orWhereHas('financeAccount', function ($q) use ($search) {
+                        $q->where('account_name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('tr_currency', function ($q) use ($search) {
+                        $q->where('currency_code', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('eq_currency', function ($q) use ($search) {
+                        $q->where('currency_code', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('bank_account', function ($q) use ($search) {
+                        $q->where('account_name', 'like', "%{$search}%");
+                    });
+              });
+          }
+  
+          // Paginate results
+          $transactions = $query->orderBy('id', 'desc')->paginate(config('pagination.per_page', 10));
+  
+          // Check if no transactions exist
+          if ($transactions->isEmpty()) {
+              throw new \Exception("هیچ تراکنشی یافت نشد!");
+          }
+  
+          // Fetch additional data
+          $currencies = Currency::where('status', 1)->get();
+          $customers = CustomerModel::where('status', 1)->get();
+          $financeAccounts = FinanceAccount::where('status', '1')
+                                           ->where('account', 'bank')
+                                           ->with(['finance_currency'])
+                                           ->get();
+  
+          return view('reports.rooznamchah', [
+              'transactions' => $transactions,
+              'currencies' => $currencies,
+              'customers' => $customers,
+              'financeAccounts' => $financeAccounts,
+          ]);
+  
+      } catch (\Throwable $e) {
+          Log::error('Error fetching transactions: ', ['exception' => $e->getMessage()]);
+          return view('reports.rooznamchah', ['error' => $e->getMessage()]);
+      }
+  }
 
 
 
@@ -209,7 +282,8 @@ class MyTransactionController extends Controller
                 if($transaction_id){
                     $update_values = ['transaction_id'=>$transaction_id,];
 
-                    $output_data = Transaction::where('id',$transaction_id)->with(['financeAccount','customer','tr_currency','eq_currency','bank_account'])->first();
+                    $output_data = Transaction::where('id',
+                    $transaction_id)->with(['financeAccount','customer','tr_currency','eq_currency','bank_account'])->first();
 
                     DB::commit();
                     return  response()->json([
