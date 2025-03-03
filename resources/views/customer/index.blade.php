@@ -6,19 +6,29 @@
 
 
 @push('styles')
-      <!-- Jalali Picker -->
-  <link href="{{asset('assets/css/flatpickr.min.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/css/flatpicker-rtl.css')}}" rel="stylesheet">
-
+<!-- Jalali Picker -->
+     <link href="{{asset('assets/jalali-date/flatpickr.min.css')}}" rel="stylesheet">
+     <link href="{{asset('assets/jalali-date/flatpicker-rtl.css')}}" rel="stylesheet">
 
 @endpush
 
-
-
 @push('scripts')
-<script src="{{ asset('assets/js/myjs/myjalalidate.js') }}"></script>
-<script src="{{ asset('assets/js/myjs/ajaxformsubmit.js') }}"></script>
 
+<script src="{{ asset('assets/js/myjs/ajaxformsubmit.js') }}"></script>
+ <!-- Flatepicker Demo Js -->
+     <!-- <script src="assets/js/pages/form-flatepicker.js"></script> -->
+     <script src="{{asset('assets/jalali-date/jdate.min.js')}}"></script>
+  <script>window.Date = window.JDate;</script>
+     <script src="{{asset('assets/jalali-date/flatpickr.min.js')}}"></script>
+     {{-- <script src="{{asset('assets/jalali-date/rangePlugin.js')}}"></script> --}}
+     <script src="{{asset('assets/jalali-date/flatpicker-fa.js')}}"></script>
+     <script>
+          flatpickr("#basic-datepicker", {
+               dateFormat: "Y/m/d",
+               "locale": "fa",
+          });
+          
+     </script>
 <script>
  // for add new customer
  $(document).ready(function () {
@@ -231,6 +241,7 @@
                 <div class="row">
                     <div class="col mb-3">
                         <label for="phone" class="form-label">شماره تماس</label>
+                        <span class="text-danger">*</span>
                         <div class="input-group">
                             <input type="text" id="phone" class="form-control contact-number-mask @error('phone') is-invalid @enderror" name="phone" placeholder="7xx xxx xxx" value="{{ old('phone') }}">
                             {{-- <span class="input-group-text">AF (+93)</span> --}}
@@ -252,12 +263,13 @@
                     </div>
                     <div class="col mb-3">
                         <label for="dob" class="form-label">تاریخ تولد</label>
-                        <input type="date" id="basic-datepicker"
+                        {{-- <input type="date" id="basic-datepicker"
                         class="form-control flatpickr-input" placeholder="تاریخ انتخاب اولیه" name="dob" id="dob"
-                          old="{{old('dob')}}">
-                        {{-- <input type="text" id="basic-datepicker"
-                        class="form-control flatpickr-input" placeholder="تاریخ انتخاب اولیه" name="dob" id="dob"
-                        readonly="readonly"  old="{{old('dob')}}"> --}}
+                          old="{{old('dob')}}"> --}}
+                       
+                        <input type="text" name="dob" id="basic-datepicker"
+                                                  class="form-control flatpickr-input" placeholder="تاریخ انتخاب اولیه"
+                                                  readonly="readonly" old="{{old('dob')}}" >
                     </div>
                 </div>
 

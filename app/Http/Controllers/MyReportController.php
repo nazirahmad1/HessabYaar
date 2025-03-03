@@ -87,7 +87,7 @@ class MyReportController extends Controller
         $date = Jalalian::now();
         $today_date = $date->getYear() . "/" . $date->getMonth() . "/" . $date->getDay();
 
-        return response()->json($today_date);
+        // return response()->json($today_date);
 
         // Start query for transactions
         $query = Transaction::where('status', 1)

@@ -3,17 +3,30 @@
 @section('page_title', 'لیست رسیدوبرد')
 
 @push('styles')
+  <!-- Jalali Picker -->
+     <link href="{{asset('assets/jalali-date/flatpickr.min.css')}}" rel="stylesheet">
+     <link href="{{asset('assets/jalali-date/flatpicker-rtl.css')}}" rel="stylesheet">
 
 
-<!-- Jalali Datepicker CSS -->
-<link rel="stylesheet" href="{{ asset('assets/jalali-date/jalalidatepicker.min.css') }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('assets/js/myjs/ajaxformsubmit.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/jalali-date/jalalidatepicker.min.js') }}"></script>
 
-
+ <!-- Flatepicker Demo Js -->
+     <!-- <script src="assets/js/pages/form-flatepicker.js"></script> -->
+     <script src="{{asset('assets/jalali-date/jdate.min.js')}}"></script>
+     <script>window.Date = window.JDate;</script>
+     <script src="{{asset('assets/jalali-date/flatpickr.min.js')}}"></script>
+     {{-- <script src="{{asset('assets/jalali-date/rangePlugin.js')}}"></script> --}}
+     <script src="{{asset('assets/jalali-date/flatpicker-fa.js')}}"></script>
+     <script>
+          flatpickr("#basic-datepicker", {
+               dateFormat: "Y/m/d",
+               "locale": "fa",
+          });
+          
+     </script>
 <script>
 
 
@@ -361,11 +374,9 @@ $(document).ready(function () {
                             class="form-control  placeholder="تاریخ انتخاب اولیه" name="date" id="date"
                               old="{{old('date')}}" required> --}}
                                 <!-- Your date input -->
-                            <input type="text" class="form-control "
-                            data-jdp
-                            placeholder="لطفا یک تاریخ وارد نمایید"
-                            data-jdp-only-date
-                            old="{{old('date')}}" required/>
+                              <input type="text" name="date" id="basic-datepicker"
+                                                  class="form-control flatpickr-input" placeholder="تاریخ انتخاب اولیه"
+                                                  readonly="readonly" old="{{old('date')}}" required>
                             @error('date')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
